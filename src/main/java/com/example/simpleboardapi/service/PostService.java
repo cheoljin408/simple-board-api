@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,10 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    public Optional<Post> getPost(Long postId) {
+        return postRepository.findById(postId);
+    }
+
     public Post create(String subject, String content) {
         Post post = new Post();
 
@@ -25,5 +30,11 @@ public class PostService {
         Post savedPost = postRepository.save(post);
 
         return savedPost;
+    }
+
+    public Post delete(Long postId) {
+        Optional<Post> post = postRepository.findById(postId);
+
+        return null;
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -41,6 +42,21 @@ public class PostController {
                 );
     }
 
+    @GetMapping("/{postId}")
+    public ResponseEntity<?> post(@PathVariable Long postId) {
+        Optional<Post> post = postService.getPost(postId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(PostDto.builder()
+                        .id(post.get().getId())
+                        .subject(post.get().getSubject())
+                        .content(post.get().getContent())
+                        .createdDate(post.get().getCreatedDate())
+                        .build()
+                );
+    }
+
     @PostMapping
     public ResponseEntity<?> createPost(@RequestBody RequestCreatePostDto requestDto) {
         Post savedPost = postService.create(requestDto.getSubject(), requestDto.getContent());
@@ -54,5 +70,10 @@ public class PostController {
                         .savedId(savedPost.getId())
                         .build()
                 );
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
+        postService.delete(postId);
     }
 }
