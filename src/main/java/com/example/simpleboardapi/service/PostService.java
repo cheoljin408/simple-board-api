@@ -1,6 +1,7 @@
 package com.example.simpleboardapi.service;
 
 import com.example.simpleboardapi.domain.Post;
+import com.example.simpleboardapi.dto.post.RequestCreatePostDto;
 import com.example.simpleboardapi.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,9 +33,22 @@ public class PostService {
         return savedPost;
     }
 
-    public Post delete(Long postId) {
+    public Optional<Post> delete(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
 
-        return null;
+        postRepository.delete(post);
+
+        return post;
+    }
+
+    public Post update(Long postId, RequestCreatePostDto requestDto) {
+        Optional<Post> post = postRepository.findById(postId);
+
+        post.get().setSubject(requestDto.getSubject());
+        post.get().setContent(requestDto.getContent());
+
+        Post updatedPost = postRepository.save(post.get());
+
+        return updatedPost;
     }
 }

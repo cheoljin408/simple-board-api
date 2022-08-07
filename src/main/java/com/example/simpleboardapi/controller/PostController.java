@@ -72,8 +72,27 @@ public class PostController {
                 );
     }
 
+    @PutMapping("/{postId}")
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody RequestCreatePostDto requestDto) {
+        Post updatedPost = postService.update(postId, requestDto);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedPost.getId()).toUri();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .location(location)
+                .body(ResponseSavedIdDto.builder()
+                        .savedId(updatedPost.getId())
+                        .build()
+                );
+    }
+
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId) {
-        postService.delete(postId);
+        Optional<Post> post = postService.delete(postId);
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(post.get());
     }
 }
