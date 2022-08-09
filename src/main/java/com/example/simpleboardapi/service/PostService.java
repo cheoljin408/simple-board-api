@@ -36,7 +36,7 @@ public class PostService {
     public Optional<Post> delete(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
 
-        postRepository.delete(post);
+        postRepository.delete(post.get());
 
         return post;
     }

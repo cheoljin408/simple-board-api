@@ -76,7 +76,7 @@ public class PostController {
     public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody RequestCreatePostDto requestDto) {
         Post updatedPost = postService.update(postId, requestDto);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedPost.getId()).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(updatedPost.getId()).toUri();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
