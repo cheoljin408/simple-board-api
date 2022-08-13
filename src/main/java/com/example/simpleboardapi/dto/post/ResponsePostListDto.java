@@ -11,5 +11,5 @@ import java.util.List;
 @Builder
 public class ResponsePostListDto {
 
-    private List<PostDto> postList;
+    private List<ResponsePostDto> postList;
 }

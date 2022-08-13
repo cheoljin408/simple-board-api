@@ -2,7 +2,7 @@ package com.example.simpleboardapi.controller;
 
 import com.example.simpleboardapi.domain.Post;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
-import com.example.simpleboardapi.dto.post.PostDto;
+import com.example.simpleboardapi.dto.post.ResponsePostDto;
 import com.example.simpleboardapi.dto.post.RequestCreatePostDto;
 import com.example.simpleboardapi.dto.post.ResponsePostListDto;
 import com.example.simpleboardapi.service.PostService;
@@ -32,7 +32,7 @@ public class PostController {
                 .status(HttpStatus.OK)
                 .body(ResponsePostListDto.builder()
                         .postList(postList.stream().map(
-                                post -> PostDto.builder()
+                                post -> ResponsePostDto.builder()
                                         .id(post.getId())
                                         .subject(post.getSubject())
                                         .content(post.getContent())
@@ -48,7 +48,7 @@ public class PostController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(PostDto.builder()
+                .body(ResponsePostDto.builder()
                         .id(post.get().getId())
                         .subject(post.get().getSubject())
                         .content(post.get().getContent())
@@ -76,7 +76,7 @@ public class PostController {
     public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody RequestCreatePostDto requestDto) {
         Post updatedPost = postService.update(postId, requestDto);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(updatedPost.getId()).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -92,7 +92,6 @@ public class PostController {
         Optional<Post> post = postService.delete(postId);
 
         return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .body(post.get());
+                .status(HttpStatus.NO_CONTENT).build();
     }
 }
