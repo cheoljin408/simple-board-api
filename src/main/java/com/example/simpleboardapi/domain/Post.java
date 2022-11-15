@@ -1,25 +1,25 @@
 package com.example.simpleboardapi.domain;
 
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
-    private Long id;
+    private Long postId;
 
     @Column(length = 200)
-    private String subject;
+    private String title;
 
     @Column(columnDefinition = "TEXT")
     private String content;
@@ -27,6 +27,10 @@ public class Post {
     @CreatedDate
     private LocalDateTime createdDate;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<Comment> commentList;
+    @Builder
+    public Post(String title, String content, LocalDateTime createdDate) {
+        this.title = title;
+        this.content = content;
+        this.createdDate = createdDate;
+    }
 }

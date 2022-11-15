@@ -3,14 +3,10 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/simple_board?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
-    password: cjfwls1226
-    initialization-mode: never
+    password: cj14011096!
   jpa:
     show-sql: true
     database: mysql
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
