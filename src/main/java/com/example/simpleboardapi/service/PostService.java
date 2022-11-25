@@ -3,6 +3,7 @@ package com.example.simpleboardapi.service;
 import com.example.simpleboardapi.domain.Post;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
+import com.example.simpleboardapi.dto.post.ResponsePostDto;
 import com.example.simpleboardapi.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,18 @@ public class PostService {
 
         return ResponseSavedIdDto.builder()
                 .savedId(savedPost.getPostId())
+                .build();
+    }
+
+    public ResponsePostDto get(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+
+        return ResponsePostDto.builder()
+                .id(post.getPostId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .createdDate(post.getCreatedDate())
                 .build();
     }
 

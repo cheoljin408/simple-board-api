@@ -2,13 +2,11 @@ package com.example.simpleboardapi.controller;
 
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
+import com.example.simpleboardapi.dto.post.ResponsePostDto;
 import com.example.simpleboardapi.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -21,7 +19,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<?> register(@RequestBody RequestRegisterPostDto requestDto) {
+    public ResponseEntity<ResponseSavedIdDto> register(@RequestBody RequestRegisterPostDto requestDto) {
         ResponseSavedIdDto responseSavedIdDto = postService.write(requestDto);
 
         URI location = ServletUriComponentsBuilder
@@ -30,7 +28,14 @@ public class PostController {
                 .buildAndExpand(responseSavedIdDto.getSavedId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(responseSavedIdDto);
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<ResponsePostDto> getPost(@PathVariable Long postId) {
+        ResponsePostDto responsePostDto = postService.get(postId);
+
+        return ResponseEntity.ok(responsePostDto);
     }
 
 //    @GetMapping
