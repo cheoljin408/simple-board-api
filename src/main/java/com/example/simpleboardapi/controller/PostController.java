@@ -3,6 +3,7 @@ package com.example.simpleboardapi.controller;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
 import com.example.simpleboardapi.dto.post.ResponsePostDto;
+import com.example.simpleboardapi.dto.post.ResponsePostListDto;
 import com.example.simpleboardapi.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,13 @@ public class PostController {
         ResponsePostDto responsePostDto = postService.get(postId);
 
         return ResponseEntity.ok(responsePostDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponsePostListDto> getPostList() {
+        ResponsePostListDto responsePostListDto = postService.getList();
+
+        return ResponseEntity.ok(responsePostListDto);
     }
 
 //    @GetMapping
