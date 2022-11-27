@@ -1,5 +1,6 @@
 package com.example.simpleboardapi.controller;
 
+import com.example.simpleboardapi.dto.common.RequestListDto;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
 import com.example.simpleboardapi.dto.post.ResponsePostDto;
@@ -40,8 +41,8 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponsePostListDto> getPostList() {
-        ResponsePostListDto responsePostListDto = postService.getList();
+    public ResponseEntity<ResponsePostListDto> getPostList(RequestListDto requestDto) {
+        ResponsePostListDto responsePostListDto = postService.getList(requestDto);
 
         return ResponseEntity.ok(responsePostListDto);
     }

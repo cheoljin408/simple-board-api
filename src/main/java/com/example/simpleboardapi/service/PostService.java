@@ -1,12 +1,15 @@
 package com.example.simpleboardapi.service;
 
 import com.example.simpleboardapi.domain.Post;
+import com.example.simpleboardapi.dto.common.RequestListDto;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
 import com.example.simpleboardapi.dto.post.ResponsePostDto;
 import com.example.simpleboardapi.dto.post.ResponsePostListDto;
 import com.example.simpleboardapi.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,8 +48,9 @@ public class PostService {
                 .build();
     }
 
-    public ResponsePostListDto getList() {
-        List<Post> postList = postRepository.findAll();
+    public ResponsePostListDto getList(RequestListDto requestDto) {
+        PageRequest pageRequest = PageRequest.of(requestDto.getPage(), requestDto.getPageSize());
+        Page<Post> postList = postRepository.findAll(pageRequest);
 
         ResponsePostListDto responsePostListDto = ResponsePostListDto.builder()
                 .postList(postList.stream().map(post -> ResponsePostDto.builder()
