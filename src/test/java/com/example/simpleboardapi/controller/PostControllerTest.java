@@ -1,5 +1,6 @@
 package com.example.simpleboardapi.controller;
 
+import com.example.simpleboardapi.domain.Post;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
 import com.example.simpleboardapi.repository.PostRepository;
@@ -14,6 +15,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static org.hamcrest.Matchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -78,7 +85,7 @@ class PostControllerTest {
 
         // expected
         mockMvc.perform(get("/posts/{postId}", postId)
-                .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(postId))
                 .andExpect(jsonPath("$.title").value("test title"))
@@ -107,6 +114,30 @@ class PostControllerTest {
                     Assertions.assertEquals(result.getResolvedException().getClass().getCanonicalName(), RuntimeException.class.getCanonicalName());
                     Assertions.assertTrue(result.getResolvedException().getClass().isAssignableFrom(RuntimeException.class));
                 })
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 페이징 조회")
+    void getPostListTest() throws Exception {
+        // given
+        List<Post> postList = IntStream.rangeClosed(1, 20).mapToObj(i -> Post.builder()
+                        .title("test title" + i)
+                        .content("test content" + i)
+                        .createdDate(LocalDateTime.now())
+                        .build())
+                .collect(Collectors.toList());
+
+        postRepository.saveAll(postList);
+
+        // expected
+        mockMvc.perform(get("/posts?page=1&pageSize=10")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalCount", is(20)))
+                .andExpect(jsonPath("$.pageSize", is(10)))
+                .andExpect(jsonPath("$.postList[0].title").value("test title20"))
+                .andExpect(jsonPath("$.postList[0].content").value("test content20"))
                 .andDo(print());
     }
 }

@@ -41,7 +41,7 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponsePostListDto> getPostList(RequestListDto requestDto) {
+    public ResponseEntity<ResponsePostListDto> getPostList(@ModelAttribute RequestListDto requestDto) {
         ResponsePostListDto responsePostListDto = postService.getList(requestDto);
 
         return ResponseEntity.ok(responsePostListDto);

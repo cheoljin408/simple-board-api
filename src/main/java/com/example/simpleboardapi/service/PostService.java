@@ -10,10 +10,10 @@ import com.example.simpleboardapi.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,10 +49,14 @@ public class PostService {
     }
 
     public ResponsePostListDto getList(RequestListDto requestDto) {
-        PageRequest pageRequest = PageRequest.of(requestDto.getPage(), requestDto.getPageSize());
+        System.out.println("requestDto = " + requestDto.getPage());
+        PageRequest pageRequest = PageRequest.of(requestDto.getPage(), requestDto.getPageSize(), Sort.Direction.DESC, "postId");
         Page<Post> postList = postRepository.findAll(pageRequest);
 
         ResponsePostListDto responsePostListDto = ResponsePostListDto.builder()
+                .totalCount((int) postList.getTotalElements())
+                .page(postList.getNumber())
+                .pageSize(postList.getSize())
                 .postList(postList.stream().map(post -> ResponsePostDto.builder()
                         .id(post.getPostId())
                         .title(post.getTitle())
