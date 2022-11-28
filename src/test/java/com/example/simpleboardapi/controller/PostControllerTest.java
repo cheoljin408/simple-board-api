@@ -163,6 +163,24 @@ class PostControllerTest {
         mockMvc.perform(put("/posts/{postId}", savedPost.getPostId())
                         .contentType(APPLICATION_JSON)
                         .content(json))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    void deletePostTest() throws Exception {
+        // given
+        Post savedPost = postRepository.save(Post.builder()
+                .title("test title")
+                .content("test content")
+                .build());
+
+        Long postId = savedPost.getPostId();
+
+        // expected
+        mockMvc.perform(delete("/posts/{postId}", postId)
+                        .contentType(APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andDo(print());
     }

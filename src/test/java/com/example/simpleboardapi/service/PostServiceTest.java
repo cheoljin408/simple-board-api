@@ -149,4 +149,25 @@ class PostServiceTest {
         assertEquals(post.getTitle(), "test title edit");
         assertEquals(post.getContent(), "test content edit");
     }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    void deleteTest() {
+        // given
+        Post savedPost = postRepository.save(Post.builder()
+                .title("test title")
+                .content("test content")
+                .build());
+
+        Long postId = savedPost.getPostId();
+
+        // when
+        postService.delete(postId);
+
+        // then
+        RuntimeException runtimeException = assertThrows(RuntimeException.class,
+                () -> postService.get(postId)
+        );
+        assertEquals("존재하지 않는 게시글입니다.", runtimeException.getMessage());
+    }
 }
