@@ -3,6 +3,7 @@ package com.example.simpleboardapi.controller;
 import com.example.simpleboardapi.dto.common.RequestListDto;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
+import com.example.simpleboardapi.dto.post.RequestUpdatePostDto;
 import com.example.simpleboardapi.dto.post.ResponsePostDto;
 import com.example.simpleboardapi.dto.post.ResponsePostListDto;
 import com.example.simpleboardapi.service.PostService;
@@ -21,7 +22,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<ResponseSavedIdDto> register(@RequestBody RequestRegisterPostDto requestDto) {
+    public ResponseEntity<ResponseSavedIdDto> registerPost(@RequestBody RequestRegisterPostDto requestDto) {
         ResponseSavedIdDto responseSavedIdDto = postService.write(requestDto);
 
         URI location = ServletUriComponentsBuilder
@@ -45,6 +46,12 @@ public class PostController {
         ResponsePostListDto responsePostListDto = postService.getList(requestDto);
 
         return ResponseEntity.ok(responsePostListDto);
+    }
+
+    @PutMapping("/{postId}")
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody RequestUpdatePostDto requestUpdatePostDto) {
+        postService.edit(postId, requestUpdatePostDto);
+        return ResponseEntity.noContent().build();
     }
 
 //    @GetMapping

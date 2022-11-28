@@ -3,6 +3,7 @@ package com.example.simpleboardapi.controller;
 import com.example.simpleboardapi.domain.Post;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
+import com.example.simpleboardapi.dto.post.RequestUpdatePostDto;
 import com.example.simpleboardapi.repository.PostRepository;
 import com.example.simpleboardapi.service.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,8 +23,7 @@ import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -138,6 +138,32 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.pageSize", is(10)))
                 .andExpect(jsonPath("$.postList[0].title").value("test title20"))
                 .andExpect(jsonPath("$.postList[0].content").value("test content20"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 수정")
+    void updatePostTest() throws Exception {
+        // given
+        Post post = Post.builder()
+                .title("test title")
+                .content("test content")
+                .build();
+
+        Post savedPost = postRepository.save(post);
+
+        RequestUpdatePostDto requestUpdatePostDto = RequestUpdatePostDto.builder()
+                .title("test title edit")
+                .content("test content edit")
+                .build();
+
+        String json = objectMapper.writeValueAsString(requestUpdatePostDto);
+
+        // expected
+        mockMvc.perform(put("/posts/{postId}", savedPost.getPostId())
+                        .contentType(APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 }

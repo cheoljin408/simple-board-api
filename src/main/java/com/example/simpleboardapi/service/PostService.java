@@ -4,6 +4,7 @@ import com.example.simpleboardapi.domain.Post;
 import com.example.simpleboardapi.dto.common.RequestListDto;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
+import com.example.simpleboardapi.dto.post.RequestUpdatePostDto;
 import com.example.simpleboardapi.dto.post.ResponsePostDto;
 import com.example.simpleboardapi.dto.post.ResponsePostListDto;
 import com.example.simpleboardapi.repository.PostRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -66,6 +68,14 @@ public class PostService {
                 .build();
 
         return responsePostListDto;
+    }
+
+    @Transactional
+    public void edit(Long postId, RequestUpdatePostDto requestDto) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+
+        post.update(requestDto);
     }
 
 //    public List<Post> getPostList() {

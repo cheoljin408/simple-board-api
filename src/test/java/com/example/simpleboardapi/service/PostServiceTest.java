@@ -4,6 +4,7 @@ import com.example.simpleboardapi.domain.Post;
 import com.example.simpleboardapi.dto.common.RequestListDto;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
+import com.example.simpleboardapi.dto.post.RequestUpdatePostDto;
 import com.example.simpleboardapi.dto.post.ResponsePostDto;
 import com.example.simpleboardapi.dto.post.ResponsePostListDto;
 import com.example.simpleboardapi.repository.PostRepository;
@@ -121,5 +122,31 @@ class PostServiceTest {
         }
         assertEquals(10, responsePostListDto.getPostList().size());
         assertEquals("test title20", responsePostListDto.getPostList().get(0).getTitle());
+    }
+
+    @Test
+    @DisplayName("게시글 수정")
+    void editTest() {
+        // given
+        RequestRegisterPostDto requestRegisterPostDto = RequestRegisterPostDto.builder()
+                .title("test title")
+                .content("test content")
+                .build();
+
+        ResponseSavedIdDto responseSavedIdDto = postService.write(requestRegisterPostDto);
+        Post post = postRepository.findById(responseSavedIdDto.getSavedId())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+
+        RequestUpdatePostDto requestUpdatePostDto = RequestUpdatePostDto.builder()
+                .title("test title edit")
+                .content("test content edit")
+                .build();
+
+        // when
+        post.update(requestUpdatePostDto);
+
+        // then
+        assertEquals(post.getTitle(), "test title edit");
+        assertEquals(post.getContent(), "test content edit");
     }
 }

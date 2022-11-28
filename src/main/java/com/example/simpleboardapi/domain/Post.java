@@ -1,5 +1,6 @@
 package com.example.simpleboardapi.domain;
 
+import com.example.simpleboardapi.dto.post.RequestUpdatePostDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,5 +33,10 @@ public class Post {
         this.title = title;
         this.content = content;
         this.createdDate = createdDate;
+    }
+
+    public void update(RequestUpdatePostDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
     }
 }
