@@ -2,17 +2,13 @@ package com.example.simpleboardapi.dto.post;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class ResponsePostDto {
+public class RequestRegisterPostDto {
 
-    private Long id;
     private String title;
+
     private String content;
-    private LocalDateTime createdDate;
 }
