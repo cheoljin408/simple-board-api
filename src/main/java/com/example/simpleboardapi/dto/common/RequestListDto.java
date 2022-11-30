@@ -9,8 +9,8 @@ import lombok.*;
 @Builder
 public class RequestListDto {
 
-    private Integer page;
-    private Integer pageSize;
+    private Integer page = 0;
+    private Integer pageSize = 10;
 
     public Integer getPage() {
         page = page - 1;

@@ -5,11 +5,14 @@ spring:
     username: root
     password: cj14011096!
   jpa:
-    show-sql: true
     database: mysql
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

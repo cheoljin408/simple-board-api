@@ -73,7 +73,7 @@ class PostServiceTest {
         ResponsePostDto responsePostDto = postService.get(postId);
 
         // then
-        assertEquals(postId, responsePostDto.getId());
+        assertEquals(postId, responsePostDto.getPostId());
         assertEquals("test title", responsePostDto.getTitle());
         assertEquals("test content", responsePostDto.getContent());
     }

@@ -87,7 +87,7 @@ class PostControllerTest {
         mockMvc.perform(get("/posts/{postId}", postId)
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(postId))
+                .andExpect(jsonPath("$.postId").value(postId))
                 .andExpect(jsonPath("$.title").value("test title"))
                 .andExpect(jsonPath("$.content").value("test content"))
                 .andDo(print());
