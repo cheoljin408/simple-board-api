@@ -43,7 +43,7 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
 
         return ResponsePostDto.builder()
-                .id(post.getPostId())
+                .postId(post.getPostId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .createdDate(post.getCreatedDate())
@@ -60,7 +60,7 @@ public class PostService {
                 .page(postList.getNumber())
                 .pageSize(postList.getSize())
                 .postList(postList.stream().map(post -> ResponsePostDto.builder()
-                        .id(post.getPostId())
+                        .postId(post.getPostId())
                         .title(post.getTitle())
                         .content(post.getContent())
                         .createdDate(post.getCreatedDate())
