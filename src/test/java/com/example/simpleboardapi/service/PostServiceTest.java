@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
@@ -73,7 +74,7 @@ class PostServiceTest {
         ResponsePostDto responsePostDto = postService.get(postId);
 
         // then
-        assertEquals(postId, responsePostDto.getId());
+        assertEquals(postId, responsePostDto.getPostId());
         assertEquals("test title", responsePostDto.getTitle());
         assertEquals("test content", responsePostDto.getContent());
     }
@@ -126,6 +127,7 @@ class PostServiceTest {
 
     @Test
     @DisplayName("게시글 수정")
+    @Transactional
     void editTest() {
         // given
         RequestRegisterPostDto requestRegisterPostDto = RequestRegisterPostDto.builder()
@@ -145,9 +147,12 @@ class PostServiceTest {
         // when
         post.update(requestUpdatePostDto);
 
+        Post updatedPost = postRepository.findById(responseSavedIdDto.getSavedId())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+
         // then
-        assertEquals(post.getTitle(), "test title edit");
-        assertEquals(post.getContent(), "test content edit");
+        assertEquals(updatedPost.getTitle(), "test title edit");
+        assertEquals(updatedPost.getContent(), "test content edit");
     }
 
     @Test
