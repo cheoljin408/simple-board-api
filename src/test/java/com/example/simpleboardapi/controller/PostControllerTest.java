@@ -1,5 +1,6 @@
 package com.example.simpleboardapi.controller;
 
+import com.example.simpleboardapi.common.exception.PostNotFoundException;
 import com.example.simpleboardapi.domain.Post;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
@@ -31,6 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class PostControllerTest {
+
+    @Autowired
+    private PostController postController;
 
     @Autowired
     private MockMvc mockMvc;
@@ -111,8 +115,8 @@ class PostControllerTest {
                     System.out.println("===================");
                     System.out.println(result.getResolvedException().toString());
                     System.out.println("===================");
-                    Assertions.assertEquals(result.getResolvedException().getClass().getCanonicalName(), RuntimeException.class.getCanonicalName());
-                    Assertions.assertTrue(result.getResolvedException().getClass().isAssignableFrom(RuntimeException.class));
+                    Assertions.assertEquals(result.getResolvedException().getClass().getCanonicalName(), PostNotFoundException.class.getCanonicalName());
+                    Assertions.assertTrue(result.getResolvedException().getClass().isAssignableFrom(PostNotFoundException.class));
                 })
                 .andDo(print());
     }
