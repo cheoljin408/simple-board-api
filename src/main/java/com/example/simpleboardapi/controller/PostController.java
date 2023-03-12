@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -22,7 +23,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<ResponseSavedIdDto> registerPost(@RequestBody RequestRegisterPostDto requestDto) {
+    public ResponseEntity<ResponseSavedIdDto> registerPost(@Valid @RequestBody RequestRegisterPostDto requestDto) {
         ResponseSavedIdDto responseSavedIdDto = postService.write(requestDto);
 
         URI location = ServletUriComponentsBuilder

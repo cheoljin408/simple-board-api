@@ -77,6 +77,29 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("게시글 등록 실패: 잘못된 제목(빈칸)")
+    void registerFailTest() throws Exception {
+        //given
+        RequestRegisterPostDto requestDto = RequestRegisterPostDto.builder()
+                .title("")
+                .content("test content")
+                .build();
+
+        String requestJson = objectMapper.writeValueAsString(requestDto);
+
+        // when, then
+        mockMvc.perform(post("/posts")
+                        .contentType(APPLICATION_JSON)
+                        .content(requestJson)
+                )
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+
+//        String[] location = mvcResult.getResponse().getHeaderValue("Location").toString().split("/");
+//        Integer savedId = Integer.parseInt(location[location.length - 1]);
+    }
+
+    @Test
     @DisplayName("게시글 단건 조회")
     void getPostTest() throws Exception {
         // given
