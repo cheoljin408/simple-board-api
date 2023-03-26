@@ -1,5 +1,6 @@
 package com.example.simpleboardapi.service;
 
+import com.example.simpleboardapi.common.exception.PostNotFoundException;
 import com.example.simpleboardapi.domain.Post;
 import com.example.simpleboardapi.dto.common.RequestListDto;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
@@ -91,10 +92,10 @@ class PostServiceTest {
         Long postId = responseSavedIdDto.getSavedId();
 
         // when, then
-        RuntimeException runtimeException = assertThrows(RuntimeException.class,
+        PostNotFoundException postNotFoundException = assertThrows(PostNotFoundException.class,
                 () -> postService.get(postId + 1L)
         );
-        assertEquals("존재하지 않는 게시글입니다.", runtimeException.getMessage());
+        assertEquals("존재하지 않는 게시글입니다.", postNotFoundException.getMessage());
     }
 
     @Test
@@ -137,7 +138,7 @@ class PostServiceTest {
 
         ResponseSavedIdDto responseSavedIdDto = postService.write(requestRegisterPostDto);
         Post post = postRepository.findById(responseSavedIdDto.getSavedId())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new PostNotFoundException());
 
         RequestUpdatePostDto requestUpdatePostDto = RequestUpdatePostDto.builder()
                 .title("test title edit")
@@ -148,7 +149,7 @@ class PostServiceTest {
         post.update(requestUpdatePostDto);
 
         Post updatedPost = postRepository.findById(responseSavedIdDto.getSavedId())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new PostNotFoundException());
 
         // then
         assertEquals(updatedPost.getTitle(), "test title edit");
@@ -170,9 +171,9 @@ class PostServiceTest {
         postService.delete(postId);
 
         // then
-        RuntimeException runtimeException = assertThrows(RuntimeException.class,
+        PostNotFoundException postNotFoundException = assertThrows(PostNotFoundException.class,
                 () -> postService.get(postId)
         );
-        assertEquals("존재하지 않는 게시글입니다.", runtimeException.getMessage());
+        assertEquals("존재하지 않는 게시글입니다.", postNotFoundException.getMessage());
     }
 }

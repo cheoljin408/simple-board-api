@@ -1,5 +1,6 @@
 package com.example.simpleboardapi.service;
 
+import com.example.simpleboardapi.common.exception.PostNotFoundException;
 import com.example.simpleboardapi.domain.Post;
 import com.example.simpleboardapi.dto.common.RequestListDto;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
@@ -40,7 +41,7 @@ public class PostService {
 
     public ResponsePostDto get(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new PostNotFoundException());
 
         return ResponsePostDto.builder()
                 .postId(post.getPostId())
@@ -73,43 +74,15 @@ public class PostService {
     @Transactional
     public void edit(Long postId, RequestUpdatePostDto requestDto) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new PostNotFoundException());
 
         post.update(requestDto);
     }
 
     public void delete(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new PostNotFoundException());
 
         postRepository.delete(post);
     }
-
-//    public List<Post> getPostList() {
-//        return postRepository.findAll();
-//    }
-//
-//    public Optional<Post> getPost(Long postId) {
-//        return postRepository.findById(postId);
-//    }
-
-//
-//    public Optional<Post> delete(Long postId) {
-//        Optional<Post> post = postRepository.findById(postId);
-//
-//        postRepository.delete(post.get());
-//
-//        return post;
-//    }
-//
-//    public Post update(Long postId, RequestCreatePostDto requestDto) {
-//        Optional<Post> post = postRepository.findById(postId);
-//
-//        post.get().setSubject(requestDto.getSubject());
-//        post.get().setContent(requestDto.getContent());
-//
-//        Post updatedPost = postRepository.save(post.get());
-//
-//        return updatedPost;
-//    }
 }
