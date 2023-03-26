@@ -1,5 +1,6 @@
 package com.example.simpleboardapi.controller;
 
+import com.example.simpleboardapi.common.exception.InvalidRequestException;
 import com.example.simpleboardapi.dto.common.RequestListDto;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -22,7 +24,10 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<ResponseSavedIdDto> registerPost(@RequestBody RequestRegisterPostDto requestDto) {
+    public ResponseEntity<ResponseSavedIdDto> registerPost(@Valid @RequestBody RequestRegisterPostDto requestDto) {
+        if (!requestDto.isValidate()) {
+            throw new InvalidRequestException("title", "제목에는 비속어가 들어갈 수 없습니다.");
+        }
         ResponseSavedIdDto responseSavedIdDto = postService.write(requestDto);
 
         URI location = ServletUriComponentsBuilder

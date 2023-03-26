@@ -1,5 +1,6 @@
 package com.example.simpleboardapi.controller;
 
+import com.example.simpleboardapi.common.exception.PostNotFoundException;
 import com.example.simpleboardapi.domain.Post;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
 import com.example.simpleboardapi.dto.post.RequestRegisterPostDto;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -31,6 +33,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class PostControllerTest {
+
+    @Autowired
+    private PostController postController;
 
     @Autowired
     private MockMvc mockMvc;
@@ -66,6 +71,52 @@ class PostControllerTest {
                         .content(requestJson)
                 )
                 .andExpect(status().isCreated())
+                .andDo(print());
+
+//        String[] location = mvcResult.getResponse().getHeaderValue("Location").toString().split("/");
+//        Integer savedId = Integer.parseInt(location[location.length - 1]);
+    }
+
+    @Test
+    @DisplayName("게시글 등록 실패: 잘못된 제목(빈칸)")
+    void registerFailTest() throws Exception {
+        //given
+        RequestRegisterPostDto requestDto = RequestRegisterPostDto.builder()
+                .title("")
+                .content("test content")
+                .build();
+
+        String requestJson = objectMapper.writeValueAsString(requestDto);
+
+        // when, then
+        mockMvc.perform(post("/posts")
+                        .contentType(APPLICATION_JSON)
+                        .content(requestJson)
+                )
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+
+//        String[] location = mvcResult.getResponse().getHeaderValue("Location").toString().split("/");
+//        Integer savedId = Integer.parseInt(location[location.length - 1]);
+    }
+
+    @Test
+    @DisplayName("게시글 등록 실패: 제목에 비속어 들어갈 때")
+    void registerFailTest2() throws Exception {
+        //given
+        RequestRegisterPostDto requestDto = RequestRegisterPostDto.builder()
+                .title("비속어")
+                .content("test content")
+                .build();
+
+        String requestJson = objectMapper.writeValueAsString(requestDto);
+
+        // when, then
+        mockMvc.perform(post("/posts")
+                        .contentType(APPLICATION_JSON)
+                        .content(requestJson)
+                )
+                .andExpect(status().isBadRequest())
                 .andDo(print());
 
 //        String[] location = mvcResult.getResponse().getHeaderValue("Location").toString().split("/");
@@ -111,8 +162,9 @@ class PostControllerTest {
                     System.out.println("===================");
                     System.out.println(result.getResolvedException().toString());
                     System.out.println("===================");
-                    Assertions.assertEquals(result.getResolvedException().getClass().getCanonicalName(), RuntimeException.class.getCanonicalName());
-                    Assertions.assertTrue(result.getResolvedException().getClass().isAssignableFrom(RuntimeException.class));
+                    Assertions.assertEquals(result.getResolvedException().getClass().getCanonicalName(), PostNotFoundException.class.getCanonicalName());
+                    Assertions.assertTrue(result.getResolvedException().getClass().isAssignableFrom(PostNotFoundException.class));
+                    Assertions.assertEquals(result.getResponse().getStatus(), HttpStatus.NOT_FOUND.value());
                 })
                 .andDo(print());
     }

@@ -9,7 +9,9 @@ import lombok.*;
 @Builder
 public class RequestListDto {
 
+    @Builder.Default
     private Integer page = 0;
+    @Builder.Default
     private Integer pageSize = 10;
 
     public Integer getPage() {
