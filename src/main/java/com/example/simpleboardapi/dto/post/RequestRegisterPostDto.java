@@ -14,4 +14,8 @@ public class RequestRegisterPostDto {
     private String title;
 
     private String content;
+
+    public boolean isValidate() {
+        return !title.contains("비속어");
+    }
 }

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -100,6 +101,29 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("게시글 등록 실패: 제목에 비속어 들어갈 때")
+    void registerFailTest2() throws Exception {
+        //given
+        RequestRegisterPostDto requestDto = RequestRegisterPostDto.builder()
+                .title("비속어")
+                .content("test content")
+                .build();
+
+        String requestJson = objectMapper.writeValueAsString(requestDto);
+
+        // when, then
+        mockMvc.perform(post("/posts")
+                        .contentType(APPLICATION_JSON)
+                        .content(requestJson)
+                )
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+
+//        String[] location = mvcResult.getResponse().getHeaderValue("Location").toString().split("/");
+//        Integer savedId = Integer.parseInt(location[location.length - 1]);
+    }
+
+    @Test
     @DisplayName("게시글 단건 조회")
     void getPostTest() throws Exception {
         // given
@@ -140,6 +164,7 @@ class PostControllerTest {
                     System.out.println("===================");
                     Assertions.assertEquals(result.getResolvedException().getClass().getCanonicalName(), PostNotFoundException.class.getCanonicalName());
                     Assertions.assertTrue(result.getResolvedException().getClass().isAssignableFrom(PostNotFoundException.class));
+                    Assertions.assertEquals(result.getResponse().getStatus(), HttpStatus.NOT_FOUND.value());
                 })
                 .andDo(print());
     }
