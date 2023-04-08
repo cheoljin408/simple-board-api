@@ -1,6 +1,7 @@
 package com.example.simpleboardapi.service;
 
 import com.example.simpleboardapi.common.exception.PostNotFoundException;
+import com.example.simpleboardapi.common.utils.PagingUtil;
 import com.example.simpleboardapi.domain.Post;
 import com.example.simpleboardapi.dto.common.RequestListDto;
 import com.example.simpleboardapi.dto.common.ResponseSavedIdDto;
@@ -57,9 +58,7 @@ public class PostService {
         Page<Post> postList = postRepository.findAll(pageRequest);
 
         ResponsePostListDto responsePostListDto = ResponsePostListDto.builder()
-                .totalCount((int) postList.getTotalElements())
-                .page(postList.getNumber())
-                .pageSize(postList.getSize())
+                .pagingUtil(new PagingUtil(postList.getTotalElements(), postList.getTotalPages(), postList.getNumber(), postList.getSize()))
                 .postList(postList.stream().map(post -> ResponsePostDto.builder()
                         .postId(post.getPostId())
                         .title(post.getTitle())
