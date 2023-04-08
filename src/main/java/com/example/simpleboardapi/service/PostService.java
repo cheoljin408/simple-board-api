@@ -53,7 +53,6 @@ public class PostService {
     }
 
     public ResponsePostListDto getList(RequestListDto requestDto) {
-        System.out.println("requestDto = " + requestDto.getPage());
         PageRequest pageRequest = PageRequest.of(requestDto.getPage(), requestDto.getPageSize(), Sort.Direction.DESC, "postId");
         Page<Post> postList = postRepository.findAll(pageRequest);
 
