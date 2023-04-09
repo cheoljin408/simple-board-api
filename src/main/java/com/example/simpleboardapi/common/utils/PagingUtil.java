@@ -14,8 +14,8 @@ public class PagingUtil {
     private int pageGroup;
     private int startPage;
     private int endPage;
-    private boolean isExistPrePageGroup;
-    private boolean isExistNextPageGroup;
+    private boolean existPrePageGroup;
+    private boolean existNextPageGroup;
 
     public PagingUtil(long totalElements, int totalPages, int pageNumber, int pageSize) {
         this.totalElements = totalElements;
@@ -26,8 +26,8 @@ public class PagingUtil {
         this.pageGroup = setPageGroup();
         this.startPage = setStartPage();
         this.endPage = setEndPage();
-        this.isExistPrePageGroup = setExistPrePageGroup();
-        this.isExistNextPageGroup = setExistNextPageGroup();
+        this.existPrePageGroup = setExistPrePageGroup();
+        this.existNextPageGroup = setExistNextPageGroup();
     }
 
     private int setTotalPageGroups() {
