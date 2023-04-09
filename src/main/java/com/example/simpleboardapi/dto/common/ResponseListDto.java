@@ -1,5 +1,6 @@
 package com.example.simpleboardapi.dto.common;
 
+import com.example.simpleboardapi.common.utils.PagingUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -9,7 +10,5 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class ResponseListDto {
 
-    private Integer totalCount;
-    private Integer page;
-    private Integer pageSize;
+    private PagingUtil pagingUtil;
 }
